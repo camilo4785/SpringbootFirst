@@ -1,10 +1,15 @@
 package com.camilo.demo.controller;
 
+import com.camilo.demo.dto.UsuarioRequestDTO;
+import com.camilo.demo.dto.UsuarioResponseDTO;
 import com.camilo.demo.model.Usuario;
 import com.camilo.demo.service.UsuarioService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -16,18 +21,32 @@ public class UsuarioController {
         this.service = service;
     }
 
+
     @GetMapping
-    public List<Usuario> obtenerUsuarios() {
-        return service.obtenerTodos();
+    public ResponseEntity<List<UsuarioResponseDTO>> obtenerUsuarios() {
+        return ResponseEntity.ok(service.obtenerTodos());
     }
+
 
     @PostMapping
-    public Usuario guardar(@RequestBody Usuario usuario){
-        return service.guardar(usuario);
+    public ResponseEntity<UsuarioResponseDTO> guardar(
+            @Valid @RequestBody UsuarioRequestDTO dto) {
+
+        return ResponseEntity.ok(service.guardar(dto));
+    }
+    @GetMapping("/buscar")
+    public Usuario buscarUsuario(@RequestParam String nombreCompleto) {
+        return service.buscarPorNombre(nombreCompleto);
     }
 
-    @GetMapping("/buscar")
-    public Usuario buscarUsuario(@RequestParam String nombre) {
-        return service.buscarPorNombre(nombre);
+    @GetMapping("/buscarDireccion")
+    public ResponseEntity<List<UsuarioResponseDTO>>  buscarDireccion(@RequestParam String direccion) {
+        return ResponseEntity.ok(service.buscarPorDireccion(direccion));}
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> obtenerUsuario(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
+
 }

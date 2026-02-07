@@ -1,27 +1,12 @@
-package com.camilo.demo.model;
+package com.camilo.demo.dto;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-@Entity
-public class Usuario {
+public class UsuarioRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
-
     private String direccion;
-
-    public Usuario() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNombre() {
         return nombre;
