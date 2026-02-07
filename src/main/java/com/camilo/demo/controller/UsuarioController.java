@@ -35,13 +35,17 @@ public class UsuarioController {
         return ResponseEntity.ok(service.guardar(dto));
     }
     @GetMapping("/buscar")
-    public Usuario buscarUsuario(@RequestParam String nombreCompleto) {
-        return service.buscarPorNombre(nombreCompleto);
+    public ResponseEntity<List<UsuarioResponseDTO>> buscarUsuario(@RequestParam String nombre) {
+        return ResponseEntity.ok(service.buscarPorNombre(nombre));
     }
 
     @GetMapping("/buscarDireccion")
     public ResponseEntity<List<UsuarioResponseDTO>>  buscarDireccion(@RequestParam String direccion) {
         return ResponseEntity.ok(service.buscarPorDireccion(direccion));}
+
+    @GetMapping("/genero")
+    public ResponseEntity<List<UsuarioResponseDTO>>  buscarGenero(@RequestParam String genero) {
+        return ResponseEntity.ok(service.buscarPorGenero(genero));}
 
 
     @GetMapping("/{id}")

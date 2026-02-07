@@ -2,7 +2,9 @@ package com.camilo.demo.service;
 import com.camilo.demo.dto.UsuarioRequestDTO;
 import com.camilo.demo.dto.UsuarioResponseDTO;
 import com.camilo.demo.exception.DireccionNoDireccion;
+import com.camilo.demo.exception.NoNombre;
 import com.camilo.demo.exception.UsuarioNoEncontradoException;
+import com.camilo.demo.mapper.UsuarioMapper;
 import com.camilo.demo.model.Usuario;
 import com.camilo.demo.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -13,62 +15,70 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository repo;
+    private final UsuarioMapper mapper;
 
-    public UsuarioService(UsuarioRepository repo) {
+    public UsuarioService(UsuarioRepository repo, UsuarioMapper mapper) {
         this.repo = repo;
+        this.mapper = mapper;
     }
 
     public List<UsuarioResponseDTO> obtenerTodos() {
 
-        return repo.findAll()
+   //antes del mapper
+    /*    return repo.findAll()
                 .stream()
                 .map(usuario -> new UsuarioResponseDTO(
                         usuario.getId(),
                         usuario.getNombre(),
-                        usuario.getDireccion()
+                        usuario.getDireccion(),
+                        usuario.getGenero()
                 ))
                 .toList();
-
+*/
+      //  List<Usuario> usuario = repo.findAll().stream().filter(usuario1 -> usuario1.getNombre().startsWith("A")).toList();
+        return mapper.toResponseDTOList(repo.findAll()); //con el mapper
     }
 
     public UsuarioResponseDTO guardar(UsuarioRequestDTO dto) {
-
-        Usuario usuario = new Usuario();
-        usuario.setNombre(dto.getNombre());
-        usuario.setDireccion(dto.getDireccion());
-
+        Usuario usuario = mapper.toEntity(dto);
         Usuario guardado = repo.save(usuario);
 
-        return new UsuarioResponseDTO(
-                guardado.getId(),
-                guardado.getNombre(),
-                guardado.getDireccion()
-        );
+        return mapper.toResponseDTO(guardado);
+
     }
 
-    public Usuario buscarPorNombre(String nombreCompleto) {
-        return repo.findByNombre(nombreCompleto);
+    public List<UsuarioResponseDTO> buscarPorNombre(String nombre) {
+
+        List<Usuario> usuarios = repo.findByNombre(nombre);
+
+        usuarios.stream().filter(usuario -> usuario.getNombre().equals("Ana"));
+
+        if (usuarios.isEmpty()) {
+            throw new NoNombre();
+        }
+
+        return mapper.toResponseDTOList(usuarios); //con el mapper
     }
 
     public List<UsuarioResponseDTO> buscarPorDireccion(String direccion) {
-        List<UsuarioResponseDTO> resultado = repo.findAll()
-                .stream()
-                .filter(usuario ->
-                        usuario.getDireccion() != null &&
-                                usuario.getDireccion().equals(direccion)
-                )
-                .map(usuario -> new UsuarioResponseDTO(
-                        usuario.getId(),
-                        usuario.getNombre(),
-                        usuario.getDireccion()
-                ))
-                .toList();
+        List<Usuario> usuarios = repo.findByDireccion(direccion);
 
-        if (resultado.isEmpty()) {
+        if (usuarios.isEmpty()) {
             throw new DireccionNoDireccion(direccion);
         }
 
-        return resultado;
+        return mapper.toResponseDTOList(usuarios);
+    }
+
+
+    public List<UsuarioResponseDTO> buscarPorGenero(String genero) {
+        List<Usuario> usuarios = repo.findByGenero(genero);
+
+        if (usuarios.isEmpty()) {
+            throw new DireccionNoDireccion(genero);
+        }
+
+        return mapper.toResponseDTOList(usuarios);
     }
 
     public UsuarioResponseDTO buscarPorId(Long id) {
@@ -79,7 +89,8 @@ public class UsuarioService {
         return new UsuarioResponseDTO(
                 usuario.getId(),
                 usuario.getNombre(),
-                usuario.getDireccion()
+                usuario.getDireccion(),
+                usuario.getGenero()
         );
     }
 

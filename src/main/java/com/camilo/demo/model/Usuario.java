@@ -13,6 +13,8 @@ public class Usuario {
 
     private String direccion;
 
+    private String genero;
+
     public Usuario() {}
 
     public Long getId() {
@@ -37,5 +39,13 @@ public class Usuario {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
 }
