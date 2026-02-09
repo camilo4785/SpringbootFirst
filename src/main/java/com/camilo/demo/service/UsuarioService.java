@@ -75,7 +75,7 @@ public class UsuarioService {
         List<Usuario> usuarios = repo.findByGenero(genero);
 
         if (usuarios.isEmpty()) {
-            throw new DireccionNoDireccion(genero);
+            throw new NoNombre();
         }
 
         return mapper.toResponseDTOList(usuarios);
@@ -86,12 +86,7 @@ public class UsuarioService {
         Usuario usuario = repo.findById(id)
                 .orElseThrow(() -> new UsuarioNoEncontradoException(id));
 
-        return new UsuarioResponseDTO(
-                usuario.getId(),
-                usuario.getNombre(),
-                usuario.getDireccion(),
-                usuario.getGenero()
-        );
+        return mapper.toResponseDTO(usuario);
     }
 
 
