@@ -6,6 +6,7 @@ import com.camilo.demo.model.Usuario;
 import com.camilo.demo.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,11 +35,14 @@ public class UsuarioController {
 
         return ResponseEntity.ok(service.guardar(dto));
     }
+
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/buscar")
     public ResponseEntity<List<UsuarioResponseDTO>> buscarUsuario(@RequestParam String nombre) {
         return ResponseEntity.ok(service.buscarPorNombre(nombre));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscarDireccion")
     public ResponseEntity<List<UsuarioResponseDTO>>  buscarDireccion(@RequestParam String direccion) {
         return ResponseEntity.ok(service.buscarPorDireccion(direccion));}

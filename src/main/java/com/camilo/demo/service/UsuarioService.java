@@ -7,8 +7,14 @@ import com.camilo.demo.exception.UsuarioNoEncontradoException;
 import com.camilo.demo.mapper.UsuarioMapper;
 import com.camilo.demo.model.Usuario;
 import com.camilo.demo.repository.UsuarioRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 
 @Service
