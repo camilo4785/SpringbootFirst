@@ -41,8 +41,15 @@ public class SecurityConfig {
                 // Reglas de autorización
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        // Swagger
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
+
 
                 // Filtro JWT
                 .addFilterBefore(

@@ -11,7 +11,6 @@ public class UsuarioResponseDTO {
         this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.genero = genero;
     }
 
     public Long getId() {
@@ -27,7 +26,8 @@ public class UsuarioResponseDTO {
     }
 
     public String getGenero() {
-        return genero;
+        return direccion;
     }
+
 
 }
